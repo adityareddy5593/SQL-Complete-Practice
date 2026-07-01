@@ -1,0 +1,347 @@
+31. Comparison Operators
+Definition
+
+Comparison operators are used in SQL to compare two values. They are commonly used in the WHERE clause to filter records.
+
+Common Comparison Operators
+Operator	Meaning
+=	Equal to
+!= or <>	Not equal to
+>	Greater than
+<	Less than
+>=	Greater than or equal to
+<=	Less than or equal to
+Syntax
+SELECT column_name
+FROM table_name
+WHERE column_name operator value;
+Example
+SELECT *
+FROM Employee
+WHERE Salary > 50000;
+
+Output
+
+EmpID	Name	Salary
+102	Priya	60000
+103	Aman	70000
+32. Logical Operators
+Definition
+
+Logical operators combine multiple conditions in SQL.
+
+Types
+AND
+OR
+NOT
+Syntax
+SELECT *
+FROM table_name
+WHERE condition1 AND condition2;
+Example
+SELECT *
+FROM Employee
+WHERE Salary > 50000
+AND Department = 'IT';
+
+Only employees satisfying both conditions are returned.
+
+33. BETWEEN
+Definition
+
+The BETWEEN operator selects values within a given range.
+
+The range is inclusive, meaning both the start and end values are included.
+
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name BETWEEN value1 AND value2;
+Example
+SELECT *
+FROM Employee
+WHERE Salary BETWEEN 30000 AND 50000;
+
+Output
+
+Name	Salary
+Rahul	35000
+Aman	50000
+34. IN
+Definition
+
+The IN operator checks whether a value matches any value in a list.
+
+It is a shorter alternative to multiple OR conditions.
+
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name IN (value1, value2, value3);
+Example
+SELECT *
+FROM Employee
+WHERE Department IN ('HR', 'IT');
+
+Equivalent to
+
+SELECT *
+FROM Employee
+WHERE Department = 'HR'
+OR Department = 'IT';
+35. LIKE
+Definition
+
+The LIKE operator is used to search for a specific pattern in a column.
+
+It works together with wildcards.
+
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name LIKE pattern;
+Example
+
+Names starting with A
+
+SELECT *
+FROM Students
+WHERE Name LIKE 'A%';
+
+Output
+
+Name
+Aman
+Anjali
+36. Wildcards
+Definition
+
+Wildcards are special characters used with the LIKE operator to search for patterns.
+
+Common Wildcards
+Wildcard	Meaning
+%	Zero or more characters
+_	Exactly one character
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name LIKE pattern;
+Examples
+Starts with A
+SELECT *
+FROM Students
+WHERE Name LIKE 'A%';
+
+Matches
+
+Aman
+Anjali
+Akash
+Ends with a
+SELECT *
+FROM Students
+WHERE Name LIKE '%a';
+
+Matches
+
+Priya
+Anusha
+Contains "it"
+SELECT *
+FROM Students
+WHERE Name LIKE '%it%';
+
+Matches
+
+Nitin
+Aditi
+Second letter is "a"
+SELECT *
+FROM Students
+WHERE Name LIKE '_a%';
+
+Matches
+
+Rahul
+Karan
+37. IS NULL / IS NOT NULL
+Definition
+
+IS NULL checks for missing values.
+
+IS NOT NULL checks for existing values.
+
+Never use
+
+WHERE Phone = NULL
+
+Always use
+
+WHERE Phone IS NULL
+Syntax
+
+Find NULL values
+
+SELECT *
+FROM table_name
+WHERE column_name IS NULL;
+
+Find non-NULL values
+
+SELECT *
+FROM table_name
+WHERE column_name IS NOT NULL;
+Example
+SELECT *
+FROM Employee
+WHERE Email IS NULL;
+
+Returns employees whose email is unknown.
+
+38. AND vs OR
+Definition
+AND
+
+Returns rows only if all conditions are true.
+
+OR
+
+Returns rows if at least one condition is true.
+
+Syntax
+AND
+SELECT *
+FROM Employee
+WHERE Salary > 50000
+AND Department='IT';
+OR
+SELECT *
+FROM Employee
+WHERE Department='HR'
+OR Department='Sales';
+Example
+
+Table
+
+Name	Department	Salary
+Rahul	IT	60000
+Priya	HR	45000
+Aman	IT	40000
+AND
+SELECT *
+FROM Employee
+WHERE Department='IT'
+AND Salary>50000;
+
+Output
+
+Name
+Rahul
+OR
+SELECT *
+FROM Employee
+WHERE Department='HR'
+OR Salary>50000;
+
+Output
+
+Name
+Rahul
+Priya
+39. Aliases
+Definition
+
+An alias is a temporary name given to a column or table to make SQL queries easier to read.
+
+The keyword AS is optional.
+
+Syntax
+Column Alias
+SELECT column_name AS alias_name
+FROM table_name;
+Table Alias
+SELECT *
+FROM table_name AS t;
+Example
+
+Column Alias
+
+SELECT Name AS Employee_Name,
+Salary AS Monthly_Salary
+FROM Employee;
+
+Output
+
+Employee_Name	Monthly_Salary
+Rahul	50000
+
+Table Alias
+
+SELECT e.Name
+FROM Employee AS e;
+40. CASE Statement
+Definition
+
+The CASE statement is used to perform conditional logic in SQL.
+
+It works similarly to an if-else statement in programming languages.
+
+Syntax
+SELECT column_name,
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    ELSE result
+END AS alias_name
+FROM table_name;
+Example
+SELECT Name,
+Salary,
+CASE
+    WHEN Salary >= 60000 THEN 'High Salary'
+    WHEN Salary >= 40000 THEN 'Medium Salary'
+    ELSE 'Low Salary'
+END AS Salary_Category
+FROM Employee;
+
+Output
+
+Name	Salary	Salary_Category
+Rahul	65000	High Salary
+Priya	45000	Medium Salary
+Aman	30000	Low Salary
+Quick Interview Revision
+Question	One-Line Answer
+Comparison Operators	Compare values using =, >, <, >=, <=, !=, or <>.
+Logical Operators	Combine conditions using AND, OR, and NOT.
+BETWEEN	Filters values within an inclusive range.
+IN	Checks if a value exists in a list of values.
+LIKE	Searches for patterns in text using wildcards.
+Wildcards	% matches any number of characters; _ matches exactly one character.
+IS NULL / IS NOT NULL	Checks for missing or existing values in a column.
+AND vs OR	AND requires all conditions to be true; OR requires at least one condition to be true.
+Aliases	Temporary names for columns or tables to improve readability.
+CASE Statement	Performs conditional logic, similar to an if-else statement.
+
+
+SELECT *
+FROM employees
+WHERE salary BETWEEN 40000 AND 60000;
+
+SELECT *
+FROM employees
+WHERE name LIKE 'A%';
+
+
+SELECT
+    emp_id,
+    name,
+    salary,
+    CASE
+        WHEN salary >= 60000 THEN 'High Salary'
+        WHEN salary >= 45000 THEN 'Medium Salary'
+        ELSE 'Low Salary'
+    END AS salary_category
+FROM employees;
+
+
