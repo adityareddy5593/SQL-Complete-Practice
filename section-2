@@ -1,0 +1,314 @@
+11. What is DDL?
+Definition
+
+DDL (Data Definition Language) is a category of SQL commands used to define, create, modify, and delete the structure of database objects such as tables, databases, indexes, and views.
+
+DDL changes the schema (structure) of the database.
+
+Common DDL Commands
+CREATE
+ALTER
+DROP
+TRUNCATE
+RENAME
+Syntax
+
+There is no single syntax for DDL because it includes multiple commands.
+
+Examples:
+
+CREATE TABLE table_name (...);
+ALTER TABLE table_name ...;
+DROP TABLE table_name;
+TRUNCATE TABLE table_name;
+Example
+CREATE TABLE Employee(
+    EmpID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Salary DECIMAL(10,2)
+);
+
+This creates a new table named Employee.
+
+12. CREATE Statement
+Definition
+
+The CREATE statement is used to create new database objects such as:
+
+Database
+Table
+View
+Index
+Syntax
+Create Database
+CREATE DATABASE database_name;
+Create Table
+CREATE TABLE table_name(
+    column1 datatype,
+    column2 datatype
+);
+Example
+CREATE TABLE Students(
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Age INT
+);
+
+Output:
+
+StudentID	Name	Age
+
+An empty table is created.
+
+13. ALTER Statement
+Definition
+
+The ALTER statement is used to modify the structure of an existing table.
+
+You can:
+
+Add columns
+Delete columns
+Rename columns
+Change data types
+Add constraints
+Syntax
+Add Column
+ALTER TABLE table_name
+ADD column_name datatype;
+Modify Column
+ALTER TABLE table_name
+MODIFY column_name datatype;
+Drop Column
+ALTER TABLE table_name
+DROP COLUMN column_name;
+Example
+
+Existing table:
+
+StudentID	Name
+101	Rahul
+
+Add Age column
+
+ALTER TABLE Students
+ADD Age INT;
+
+Result
+
+StudentID	Name	Age
+101	Rahul	NULL
+14. DROP Statement
+Definition
+
+The DROP statement permanently removes an entire database object.
+
+It deletes:
+
+Structure
+Data
+Constraints
+Indexes
+
+The object cannot be used after dropping.
+
+Syntax
+Drop Table
+DROP TABLE table_name;
+Drop Database
+DROP DATABASE database_name;
+Example
+DROP TABLE Students;
+
+The Students table is permanently deleted.
+
+15. TRUNCATE Statement
+Definition
+
+The TRUNCATE statement removes all rows from a table but keeps the table structure intact.
+
+It is much faster than DELETE because it does not remove rows one by one.
+
+Syntax
+TRUNCATE TABLE table_name;
+Example
+
+Before
+
+ID	Name
+1	Rahul
+2	Priya
+TRUNCATE TABLE Students;
+
+After
+
+ID	Name
+
+The table still exists but contains no rows.
+
+16. Difference Between DROP and TRUNCATE
+DROP	TRUNCATE
+Deletes the table completely	Deletes only the data
+Structure is removed	Structure remains
+Cannot insert data unless table is recreated	Can insert data immediately
+Deletes indexes and constraints	Keeps indexes and constraints
+Frees all storage	Keeps table definition
+DDL Command	DDL Command
+Example
+
+DROP
+
+DROP TABLE Students;
+
+Result:
+
+Table removed completely.
+
+TRUNCATE
+
+TRUNCATE TABLE Students;
+
+Result:
+
+Table remains.
+All rows removed.
+17. NOT NULL Constraint
+Definition
+
+The NOT NULL constraint ensures that a column cannot contain NULL values.
+
+Every row must have a value for that column.
+
+Syntax
+CREATE TABLE table_name(
+    column_name datatype NOT NULL
+);
+Example
+CREATE TABLE Employee(
+    EmpID INT,
+    Name VARCHAR(50) NOT NULL
+);
+
+Valid
+
+INSERT INTO Employee
+VALUES(1,'Rahul');
+
+Invalid
+
+INSERT INTO Employee(EmpID)
+VALUES(2);
+
+Error because Name cannot be NULL.
+
+18. UNIQUE Constraint
+Definition
+
+The UNIQUE constraint ensures that all values in a column are different.
+
+Unlike a Primary Key, a UNIQUE column can typically contain a NULL value (behavior can vary slightly by database system).
+
+Syntax
+CREATE TABLE table_name(
+    column_name datatype UNIQUE
+);
+Example
+CREATE TABLE Employee(
+    EmpID INT,
+    Email VARCHAR(50) UNIQUE
+);
+
+Valid
+
+INSERT INTO Employee
+VALUES(1,'abc@gmail.com');
+
+Invalid
+
+INSERT INTO Employee
+VALUES(2,'abc@gmail.com');
+
+Duplicate email is not allowed.
+
+19. CHECK Constraint
+Definition
+
+The CHECK constraint restricts the values that can be stored in a column by enforcing a condition.
+
+Syntax
+CREATE TABLE table_name(
+    column_name datatype
+    CHECK(condition)
+);
+Example
+CREATE TABLE Employee(
+    EmpID INT,
+    Age INT CHECK(Age>=18)
+);
+
+Valid
+
+INSERT INTO Employee
+VALUES(1,22);
+
+Invalid
+
+INSERT INTO Employee
+VALUES(2,15);
+
+Error because Age must be at least 18.
+
+20. DEFAULT Constraint
+Definition
+
+The DEFAULT constraint assigns a predefined value to a column when no value is provided during insertion.
+
+Syntax
+CREATE TABLE table_name(
+    column_name datatype
+    DEFAULT value
+);
+Example
+CREATE TABLE Employee(
+    EmpID INT,
+    Country VARCHAR(20)
+    DEFAULT 'India'
+);
+
+Insert without Country
+
+INSERT INTO Employee(EmpID)
+VALUES(1);
+
+Result
+
+EmpID	Country
+1	India
+
+The default value India is automatically inserted.
+
+Quick Interview Revision
+Question	One-Line Answer
+What is DDL?	DDL (Data Definition Language) is used to create, modify, and delete database structures.
+CREATE	Creates a new database object such as a database or table.
+ALTER	Modifies the structure of an existing table.
+DROP	Permanently deletes a database object and all its data.
+TRUNCATE	Removes all rows from a table while keeping its structure.
+DROP vs TRUNCATE	DROP removes the table itself; TRUNCATE removes only the data.
+NOT NULL	Prevents a column from storing NULL values.
+UNIQUE	Ensures all values in a column are distinct.
+CHECK	Allows only values that satisfy a specified condition.
+DEFAULT	Automatically inserts a predefined value when none is provided.
+
+
+Task 2: Table Modification
+Objective: Modify an existing table using DDL commands.
+Requirements:
+● Add email column with UNIQUE constraint
+● Add default value to department
+● Drop an unused column
+
+
+alter table employees add email varchar(100) unique;
+alter table employees modify department varchar(30) default 'hello';
+alter table employees drop age;
