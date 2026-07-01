@@ -1,0 +1,276 @@
+1. What is SQL?
+Definition
+
+SQL (Structured Query Language) is a standard language used to create, access, modify, and manage data stored in relational databases.
+
+It is used to:
+
+Create databases and tables
+Insert data
+Retrieve data
+Update data
+Delete data
+Basic Syntax
+SELECT column_name
+FROM table_name;
+Example
+SELECT * FROM Students;
+
+Output
+
+StudentID	Name	Age
+101	Rahul	20
+102	Priya	21
+2. What are Databases?
+Definition
+
+A database is an organized collection of related data that can be stored, managed, and accessed efficiently.
+
+Example:
+
+Student records
+Employee details
+Bank accounts
+Hospital records
+Syntax
+CREATE DATABASE database_name;
+Example
+CREATE DATABASE College;
+
+This creates a database named College.
+
+3. Difference between SQL and NoSQL
+Definition
+SQL
+Relational database
+Stores data in tables
+Fixed schema
+Uses SQL language
+NoSQL
+Non-relational database
+Stores data as documents, key-value pairs, graphs, etc.
+Flexible schema
+SQL	NoSQL
+Table-based	Document/Key-Value
+Fixed Schema	Flexible Schema
+ACID	BASE
+Structured Data	Semi/Unstructured Data
+MySQL, PostgreSQL	MongoDB, Cassandra
+SQL Example
+CREATE TABLE Students(
+    ID INT,
+    Name VARCHAR(30)
+);
+NoSQL Example (MongoDB)
+{
+   "ID":101,
+   "Name":"Rahul"
+}
+4. What is a Table?
+Definition
+
+A table is a collection of related data organized into rows and columns.
+
+Each table stores information about one specific entity.
+
+Syntax
+CREATE TABLE table_name(
+    column1 datatype,
+    column2 datatype
+);
+Example
+CREATE TABLE Students(
+    StudentID INT,
+    Name VARCHAR(50),
+    Age INT
+);
+
+Table:
+
+StudentID	Name	Age
+101	Rahul	20
+102	Priya	21
+5. What is a Row and Column?
+Definition
+Row
+
+A row is a single record in a table.
+
+Column
+
+A column is a field or attribute that stores one type of information.
+
+Example Table
+StudentID	Name	Age
+101	Rahul	20
+102	Priya	21
+Row
+101 | Rahul | 20
+
+One student's complete information.
+
+Column
+StudentID
+
+Contains all student IDs.
+
+Syntax
+
+Retrieve rows and columns
+
+SELECT Name, Age
+FROM Students;
+6. What is a Primary Key?
+Definition
+
+A Primary Key is a column that uniquely identifies every row in a table.
+
+Properties:
+
+Unique
+Cannot contain NULL
+One primary key per table
+Syntax
+CREATE TABLE Students(
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(30)
+);
+Example
+StudentID	Name
+101	Rahul
+102	Priya
+
+StudentID is the Primary Key.
+
+7. What is a Foreign Key?
+Definition
+
+A Foreign Key is a column that references the Primary Key of another table.
+
+It creates a relationship between two tables.
+
+Syntax
+CREATE TABLE Orders(
+    OrderID INT PRIMARY KEY,
+    StudentID INT,
+    FOREIGN KEY(StudentID)
+    REFERENCES Students(StudentID)
+);
+Example
+Students
+StudentID	Name
+101	Rahul
+102	Priya
+Orders
+OrderID	StudentID
+1	101
+2	102
+
+StudentID in Orders is a Foreign Key.
+
+8. What is a Constraint?
+Definition
+
+A Constraint is a rule applied to a table that restricts the type of data that can be inserted.
+
+It maintains data accuracy and integrity.
+
+Types of Constraints
+PRIMARY KEY
+FOREIGN KEY
+NOT NULL
+UNIQUE
+CHECK
+DEFAULT
+Syntax
+CREATE TABLE Employee(
+    ID INT PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Age INT CHECK(Age>=18),
+    Email VARCHAR(50) UNIQUE,
+    Country VARCHAR(20) DEFAULT 'India'
+);
+Example
+INSERT INTO Employee(ID,Name,Age)
+VALUES(1,'Rahul',20);
+
+Valid
+
+INSERT INTO Employee(ID,Name,Age)
+VALUES(1,'Priya',20);
+
+Invalid because ID is already used.
+
+9. What is NULL?
+Definition
+
+NULL represents a missing, unknown, or unavailable value.
+
+It is not
+
+0
+Empty string ("")
+False
+Syntax
+
+Find NULL values
+
+SELECT *
+FROM Students
+WHERE Phone IS NULL;
+Example
+ID	Name	Phone
+1	Rahul	9876543210
+2	Priya	NULL
+
+Priya's phone number is unknown.
+
+10. What are SQL Data Types?
+Definition
+
+Data types define the kind of values that a column can store.
+
+Common SQL Data Types
+Numeric
+Data Type	Description	Example
+INT	Whole numbers	100
+BIGINT	Large integers	999999999
+FLOAT	Decimal numbers	12.45
+DECIMAL(10,2)	Precise decimal values	1500.75
+Character
+Data Type	Description	Example
+CHAR(10)	Fixed-length string	"Hello"
+VARCHAR(50)	Variable-length string	"Rahul"
+TEXT	Large text	"This is a paragraph..."
+Date & Time
+Data Type	Example
+DATE	2026-07-01
+TIME	10:30:45
+DATETIME	2026-07-01 10:30:45
+TIMESTAMP	Current timestamp
+Boolean
+Data Type	Example
+BOOLEAN	TRUE/FALSE
+Syntax
+CREATE TABLE Employee(
+    ID INT,
+    Name VARCHAR(50),
+    Salary DECIMAL(10,2),
+    JoiningDate DATE,
+    IsActive BOOLEAN
+);
+Example
+INSERT INTO Employee
+VALUES(101,'Rahul',50000.50,'2026-07-01',TRUE);
+Quick Interview Revision
+Question	One-Line Answer
+What is SQL?	SQL is a language used to manage relational databases.
+What is a database?	A database is an organized collection of related data.
+What is a table?	A table stores related data in rows and columns.
+What is a row?	A row is one complete record in a table.
+What is a column?	A column represents one attribute of the data.
+What is a Primary Key?	A unique identifier for each row; cannot be NULL.
+What is a Foreign Key?	A column that references a primary key in another table.
+What is a Constraint?	A rule that ensures data integrity and validity.
+What is NULL?	A marker for missing or unknown data.
+What are SQL Data Types?	They define the type of data a column can store, such as INT, VARCHAR, DATE, and BOOLEAN.
