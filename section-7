@@ -1,0 +1,426 @@
+61. What is a Subquery?
+Definition
+
+A Subquery is a query inside another SQL query.
+
+The inner query executes first, and its result is used by the outer query.
+
+Subqueries can be used in:
+
+SELECT
+INSERT
+UPDATE
+DELETE
+WHERE
+FROM
+HAVING
+Syntax
+SELECT column_name
+FROM table_name
+WHERE column_name operator
+(
+    SELECT column_name
+    FROM another_table
+);
+Example
+
+Find employees who work in the IT department.
+
+Employees
+EmpID	Name	DeptID
+101	Rahul	1
+102	Priya	2
+103	Aman	1
+Departments
+DeptID	Department
+1	IT
+2	HR
+SELECT Name
+FROM Employees
+WHERE DeptID =
+(
+    SELECT DeptID
+    FROM Departments
+    WHERE Department='IT'
+);
+Output
+Name
+Rahul
+Aman
+62. Single-row Subquery
+Definition
+
+A Single-row Subquery returns only one row (one value).
+
+It is used with operators like:
+
+=
+<
+
+=
+
+<=
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name =
+(
+    SELECT column_name
+    FROM table_name
+);
+Example
+
+Find employees earning the highest salary.
+
+Employee
+Name	Salary
+Rahul	40000
+Priya	60000
+Aman	50000
+SELECT Name,Salary
+FROM Employee
+WHERE Salary =
+(
+SELECT MAX(Salary)
+FROM Employee
+);
+Output
+Name	Salary
+Priya	60000
+63. Multi-row Subquery
+Definition
+
+A Multi-row Subquery returns multiple rows.
+
+Use operators like:
+
+IN
+ANY
+ALL
+Syntax
+SELECT *
+FROM table_name
+WHERE column_name IN
+(
+SELECT column_name
+FROM another_table
+);
+Example
+
+Find employees working in IT or HR.
+
+Departments
+DeptID	Department
+1	IT
+2	HR
+SELECT Name
+FROM Employees
+WHERE DeptID IN
+(
+SELECT DeptID
+FROM Departments
+WHERE Department IN('IT','HR')
+);
+Output
+Name
+Rahul
+Priya
+Aman
+64. Correlated Subquery
+Definition
+
+A Correlated Subquery depends on the outer query.
+
+Unlike a normal subquery:
+
+Executes once for every row in the outer query.
+Cannot run independently.
+Syntax
+SELECT columns
+FROM table1 t1
+WHERE condition
+(
+SELECT ...
+FROM table2 t2
+WHERE t2.column=t1.column
+);
+Example
+
+Find employees earning more than their department's average salary.
+
+Employee
+Name	DeptID	Salary
+Rahul	1	60000
+Aman	1	40000
+Priya	2	50000
+SELECT Name,
+Salary
+FROM Employee E1
+WHERE Salary >
+(
+SELECT AVG(Salary)
+FROM Employee E2
+WHERE E1.DeptID=E2.DeptID
+);
+Output
+Name
+Rahul
+65. EXISTS
+Definition
+
+EXISTS checks whether a subquery returns at least one row.
+
+If the subquery returns any row:
+
+TRUE
+
+Otherwise:
+
+FALSE
+Syntax
+SELECT *
+FROM table_name
+WHERE EXISTS
+(
+SELECT *
+FROM another_table
+WHERE condition
+);
+Example
+
+Find departments that have employees.
+
+SELECT Department
+FROM Departments D
+WHERE EXISTS
+(
+SELECT *
+FROM Employees E
+WHERE E.DeptID=D.DeptID
+);
+Output
+Department
+IT
+HR
+66. IN vs EXISTS
+Definition
+
+Both are used with subqueries but work differently.
+
+Comparison
+IN	EXISTS
+Compares values	Checks if rows exist
+Better for small result sets	Better for large result sets
+Returns matching values	Returns TRUE/FALSE
+May scan all results	Stops after first match
+IN Example
+SELECT Name
+FROM Employees
+WHERE DeptID IN
+(
+SELECT DeptID
+FROM Departments
+);
+EXISTS Example
+SELECT Department
+FROM Departments D
+WHERE EXISTS
+(
+SELECT *
+FROM Employees E
+WHERE D.DeptID=E.DeptID
+);
+67. Common Table Expression (CTE)
+Definition
+
+A CTE (Common Table Expression) is a temporary named result set created using the WITH clause.
+
+It improves:
+
+Readability
+Maintainability
+Reusability
+
+CTEs exist only during query execution.
+
+Syntax
+WITH CTE_Name AS
+(
+SELECT columns
+FROM table_name
+)
+SELECT *
+FROM CTE_Name;
+Example
+WITH HighSalary AS
+(
+SELECT *
+FROM Employee
+WHERE Salary>50000
+)
+
+SELECT *
+FROM HighSalary;
+Output
+Name	Salary
+Priya	60000
+68. Recursive CTE
+Definition
+
+A Recursive CTE is a CTE that refers to itself.
+
+Used for:
+
+Employee hierarchy
+Organization chart
+Folder structure
+Parent-child relationships
+Tree traversal
+
+It contains:
+
+Anchor query
+Recursive query
+Syntax
+WITH RecursiveCTE AS
+(
+Anchor Query
+
+UNION ALL
+
+Recursive Query
+)
+
+SELECT *
+FROM RecursiveCTE;
+Example
+
+Generate numbers from 1 to 5.
+
+WITH Numbers AS
+(
+SELECT 1 AS Num
+
+UNION ALL
+
+SELECT Num+1
+FROM Numbers
+WHERE Num<5
+)
+
+SELECT *
+FROM Numbers;
+Output
+Num
+1
+2
+3
+4
+5
+69. WITH Clause
+Definition
+
+The WITH clause is used to define one or more Common Table Expressions (CTEs).
+
+It makes complex SQL queries easier to understand.
+
+Syntax
+WITH CTE_Name AS
+(
+SELECT ...
+)
+
+SELECT *
+FROM CTE_Name;
+Example
+WITH ITEmployees AS
+(
+SELECT *
+FROM Employee
+WHERE Department='IT'
+)
+
+SELECT *
+FROM ITEmployees;
+Output
+
+Only IT employees are displayed.
+
+70. CTE vs Subquery
+Comparison
+CTE	Subquery
+Created using WITH	Written inside another query
+More readable	Can become difficult to read
+Reusable within the same query	Usually written once
+Supports recursion	Does not support recursion
+Good for complex queries	Good for simple queries
+Can improve maintainability	Can become deeply nested
+Subquery Example
+SELECT Name
+FROM Employee
+WHERE Salary>
+(
+SELECT AVG(Salary)
+FROM Employee
+);
+CTE Example
+WITH AvgSalary AS
+(
+SELECT AVG(Salary) AS AvgSal
+FROM Employee
+)
+
+SELECT Name
+FROM Employee, AvgSalary
+WHERE Salary>AvgSal;
+Difference Between Normal CTE and Recursive CTE
+Normal CTE	Recursive CTE
+Does not call itself	Calls itself repeatedly
+Used for simplifying queries	Used for hierarchical or iterative data
+Runs only once	Runs until the stopping condition is met
+Quick Interview Revision
+Question	One-Line Answer
+What is a Subquery?	A query nested inside another SQL query whose result is used by the outer query.
+Single-row Subquery	Returns one row and is used with operators like =, >, or <.
+Multi-row Subquery	Returns multiple rows and is used with IN, ANY, or ALL.
+Correlated Subquery	Depends on the outer query and executes once for each outer row.
+EXISTS	Returns TRUE if the subquery returns at least one row.
+IN vs EXISTS	IN compares values; EXISTS checks whether matching rows exist and is often more efficient for large datasets.
+CTE	A temporary named result set created using the WITH clause.
+Recursive CTE	A CTE that references itself to process hierarchical or recursive data.
+WITH Clause	Introduces one or more Common Table Expressions before the main query.
+CTE vs Subquery	CTEs are more readable, reusable, and support recursion; subqueries are simpler for smaller queries.
+
+
+
+Task 7: Advanced Salary Queries
+Objective: Use subqueries and CTEs for complex logic.
+Requirements:
+● Find employees earning more than average salary
+● Use CTE to rank salaries
+
+
+
+SELECT emp_id,
+       name,
+       salary
+FROM employees
+WHERE salary >
+(
+    SELECT AVG(salary)
+    FROM employees
+);
+
+
+
+WITH SalaryRank AS
+(
+    SELECT emp_id,
+           name,
+           salary,
+           RANK() OVER (ORDER BY salary DESC) AS salary_rank
+    FROM employees
+)
+
+SELECT *
+FROM SalaryRank;
