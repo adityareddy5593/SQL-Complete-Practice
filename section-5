@@ -1,0 +1,336 @@
+41. COUNT()
+Definition
+
+The COUNT() function returns the number of rows that match a specified condition.
+
+It is commonly used to count records in a table.
+
+Types
+COUNT(*) → Counts all rows.
+COUNT(column_name) → Counts only non-NULL values in a column.
+COUNT(DISTINCT column_name) → Counts unique non-NULL values.
+Syntax
+SELECT COUNT(*)
+FROM table_name;
+Example
+Employee Table
+EmpID	Name	Department
+101	Rahul	IT
+102	Priya	HR
+103	Aman	IT
+SELECT COUNT(*)
+FROM Employee;
+
+Output
+
+COUNT(*)
+3
+42. SUM()
+Definition
+
+The SUM() function returns the total sum of numeric values in a column.
+
+It works only with numeric data types.
+
+Syntax
+SELECT SUM(column_name)
+FROM table_name;
+Example
+Name	Salary
+Rahul	40000
+Priya	50000
+Aman	30000
+SELECT SUM(Salary)
+FROM Employee;
+
+Output
+
+SUM(Salary)
+120000
+43. AVG()
+Definition
+
+The AVG() function calculates the average (mean) value of a numeric column.
+
+NULL values are ignored.
+
+Syntax
+SELECT AVG(column_name)
+FROM table_name;
+Example
+SELECT AVG(Salary)
+FROM Employee;
+
+Output
+
+AVG(Salary)
+40000
+44. MIN()
+Definition
+
+The MIN() function returns the smallest value in a column.
+
+It works with:
+
+Numbers
+Dates
+Text (alphabetically)
+Syntax
+SELECT MIN(column_name)
+FROM table_name;
+Example
+SELECT MIN(Salary)
+FROM Employee;
+
+Output
+
+MIN(Salary)
+30000
+45. MAX()
+Definition
+
+The MAX() function returns the largest value in a column.
+
+It works with:
+
+Numbers
+Dates
+Text
+Syntax
+SELECT MAX(column_name)
+FROM table_name;
+Example
+SELECT MAX(Salary)
+FROM Employee;
+
+Output
+
+MAX(Salary)
+50000
+46. GROUP BY
+Definition
+
+The GROUP BY clause groups rows that have the same values in specified columns.
+
+It is commonly used with aggregate functions like:
+
+COUNT()
+SUM()
+AVG()
+MIN()
+MAX()
+Syntax
+SELECT column_name,
+       aggregate_function(column_name)
+FROM table_name
+GROUP BY column_name;
+Example
+Employee Table
+Name	Department	Salary
+Rahul	IT	40000
+Priya	HR	50000
+Aman	IT	30000
+SELECT Department,
+SUM(Salary)
+FROM Employee
+GROUP BY Department;
+
+Output
+
+Department	SUM(Salary)
+IT	70000
+HR	50000
+47. HAVING
+Definition
+
+The HAVING clause filters groups created by GROUP BY.
+
+Unlike WHERE, it can filter based on aggregate functions.
+
+Syntax
+SELECT column_name,
+aggregate_function(column_name)
+FROM table_name
+GROUP BY column_name
+HAVING condition;
+Example
+SELECT Department,
+AVG(Salary)
+FROM Employee
+GROUP BY Department
+HAVING AVG(Salary) > 35000;
+
+Output
+
+Department	AVG(Salary)
+HR	50000
+48. Difference Between WHERE and HAVING
+WHERE	HAVING
+Filters individual rows	Filters grouped records
+Executed before GROUP BY	Executed after GROUP BY
+Cannot use aggregate functions directly	Can use aggregate functions
+Used with SELECT, UPDATE, DELETE	Used mainly with GROUP BY
+Example
+WHERE
+SELECT *
+FROM Employee
+WHERE Salary > 40000;
+
+Filters rows before grouping.
+
+HAVING
+SELECT Department,
+COUNT(*)
+FROM Employee
+GROUP BY Department
+HAVING COUNT(*) > 1;
+
+Filters groups after grouping.
+
+49. Aggregate vs Scalar Functions
+Definition
+Aggregate Functions
+
+Operate on multiple rows and return one result.
+
+Examples:
+
+COUNT()
+SUM()
+AVG()
+MIN()
+MAX()
+Scalar Functions
+
+Operate on a single value and return one value for each row.
+
+Examples:
+
+UPPER()
+LOWER()
+LENGTH()
+ROUND()
+NOW()
+Comparison
+Aggregate Functions	Scalar Functions
+Work on multiple rows	Work on one value
+Return one result per group/query	Return one result per row
+Often used with GROUP BY	Used in any query
+Examples: SUM(), COUNT()	Examples: UPPER(), LOWER()
+Example
+Aggregate Function
+SELECT AVG(Salary)
+FROM Employee;
+
+Output
+
+AVG(Salary)
+40000
+Scalar Function
+SELECT UPPER(Name)
+FROM Employee;
+
+Output
+
+UPPER(Name)
+RAHUL
+PRIYA
+AMAN
+50. ROLLUP / CUBE (Conceptual)
+Definition
+ROLLUP
+
+ROLLUP generates subtotals and a grand total for grouped data.
+
+It creates hierarchical summaries from left to right.
+
+Syntax
+SELECT column1,
+column2,
+SUM(column3)
+FROM table_name
+GROUP BY ROLLUP(column1, column2);
+Example
+Sales Table
+Department	Month	Sales
+IT	Jan	10000
+IT	Feb	12000
+HR	Jan	8000
+SELECT Department,
+Month,
+SUM(Sales)
+FROM Sales
+GROUP BY ROLLUP(Department, Month);
+
+Output (Conceptual)
+
+Department	Month	Sales
+IT	Jan	10000
+IT	Feb	12000
+IT	NULL	22000
+HR	Jan	8000
+HR	NULL	8000
+NULL	NULL	30000
+Definition
+CUBE
+
+CUBE generates all possible combinations of subtotals, including row-wise, column-wise, and grand totals.
+
+It is more comprehensive than ROLLUP.
+
+Syntax
+SELECT column1,
+column2,
+SUM(column3)
+FROM table_name
+GROUP BY CUBE(column1, column2);
+Example
+SELECT Department,
+Month,
+SUM(Sales)
+FROM Sales
+GROUP BY CUBE(Department, Month);
+
+This returns:
+
+Sales by Department and Month
+Sales by Department
+Sales by Month
+Grand Total
+Difference Between ROLLUP and CUBE
+ROLLUP	CUBE
+Produces hierarchical subtotals	Produces all possible subtotals
+Includes grand total	Includes grand total
+Fewer summary rows	More summary rows
+Best for hierarchical reports	Best for multidimensional analysis
+Quick Interview Revision
+Question	One-Line Answer
+COUNT()	Returns the number of rows or non-NULL values.
+SUM()	Returns the total of numeric values in a column.
+AVG()	Returns the average value of a numeric column.
+MIN()	Returns the smallest value in a column.
+MAX()	Returns the largest value in a column.
+GROUP BY	Groups rows with the same values for aggregate calculations.
+HAVING	Filters grouped records based on aggregate conditions.
+WHERE vs HAVING	WHERE filters rows before grouping; HAVING filters groups after grouping.
+Aggregate vs Scalar Functions	Aggregate functions work on multiple rows; scalar functions work on individual values.
+ROLLUP / CUBE	ROLLUP generates hierarchical subtotals; CUBE generates all possible subtotal combinations.
+
+
+Task 5: Salary Analysis
+Objective: Analyze salary data using aggregates.
+Requirements:
+● Find average salary per department
+● Show departments with average salary above a threshold
+
+
+SELECT department, AVG(salary) AS average_salary
+FROM employees
+GROUP BY department;
+
+
+SELECT department, AVG(salary) AS average_salary
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 45000;
+
