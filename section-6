@@ -1,0 +1,367 @@
+Sample Tables Used in All Examples
+Employees Table
+EmpID	Name	DeptID
+101	Rahul	1
+102	Priya	2
+103	Aman	3
+104	Neha	NULL
+Departments Table
+DeptID	Department
+1	IT
+2	HR
+4	Sales
+51. What is a JOIN?
+Definition
+
+A JOIN is used to combine rows from two or more tables based on a related column.
+
+Usually, tables are joined using a Primary Key and a Foreign Key.
+
+Types of Joins
+INNER JOIN
+LEFT JOIN
+RIGHT JOIN
+FULL JOIN
+SELF JOIN
+CROSS JOIN
+Syntax
+SELECT columns
+FROM table1
+JOIN table2
+ON table1.column = table2.column;
+Example
+SELECT Employees.Name,
+Departments.Department
+FROM Employees
+INNER JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+52. INNER JOIN
+Definition
+
+An INNER JOIN returns only the matching rows from both tables.
+
+Rows without matching values are ignored.
+
+Syntax
+SELECT columns
+FROM table1
+INNER JOIN table2
+ON table1.column = table2.column;
+Example
+SELECT Employees.Name,
+Departments.Department
+FROM Employees
+INNER JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+Output
+Name	Department
+Rahul	IT
+Priya	HR
+
+Explanation
+
+Aman is excluded because DeptID = 3 doesn't exist.
+Neha is excluded because DeptID is NULL.
+53. LEFT JOIN
+Definition
+
+A LEFT JOIN returns:
+
+All rows from the left table
+Matching rows from the right table
+If no match exists, NULL values are returned.
+Syntax
+SELECT columns
+FROM table1
+LEFT JOIN table2
+ON table1.column = table2.column;
+Example
+SELECT Employees.Name,
+Departments.Department
+FROM Employees
+LEFT JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+Output
+Name	Department
+Rahul	IT
+Priya	HR
+Aman	NULL
+Neha	NULL
+54. RIGHT JOIN
+Definition
+
+A RIGHT JOIN returns:
+
+All rows from the right table
+Matching rows from the left table
+If no match exists, NULL values are returned.
+Syntax
+SELECT columns
+FROM table1
+RIGHT JOIN table2
+ON table1.column = table2.column;
+Example
+SELECT Employees.Name,
+Departments.Department
+FROM Employees
+RIGHT JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+Output
+Name	Department
+Rahul	IT
+Priya	HR
+NULL	Sales
+
+Sales exists in Departments but has no employee.
+
+55. FULL JOIN (FULL OUTER JOIN)
+Definition
+
+A FULL JOIN returns:
+
+All matching rows
+All rows from the left table
+All rows from the right table
+
+Unmatched values are filled with NULL.
+
+Note: MySQL does not support FULL OUTER JOIN directly. It can be simulated using LEFT JOIN UNION RIGHT JOIN.
+
+Syntax
+SELECT columns
+FROM table1
+FULL OUTER JOIN table2
+ON table1.column = table2.column;
+Example
+Output
+Name	Department
+Rahul	IT
+Priya	HR
+Aman	NULL
+Neha	NULL
+NULL	Sales
+56. SELF JOIN
+Definition
+
+A SELF JOIN joins a table with itself.
+
+It is useful when comparing rows within the same table, such as employees and their managers.
+
+Example Table
+EmpID	Name	ManagerID
+101	Rahul	103
+102	Priya	103
+103	Aman	NULL
+Syntax
+SELECT A.Name AS Employee,
+B.Name AS Manager
+FROM Employee A
+JOIN Employee B
+ON A.ManagerID = B.EmpID;
+Output
+Employee	Manager
+Rahul	Aman
+Priya	Aman
+57. CROSS JOIN
+Definition
+
+A CROSS JOIN returns the Cartesian Product of two tables.
+
+Every row from the first table is combined with every row from the second table.
+
+If:
+
+Table A has 3 rows
+Table B has 4 rows
+
+Result = 3 × 4 = 12 rows
+
+Syntax
+SELECT *
+FROM table1
+CROSS JOIN table2;
+Example
+Table A
+Color
+Red
+Blue
+Table B
+Size
+S
+M
+SELECT *
+FROM Colors
+CROSS JOIN Sizes;
+Output
+Color	Size
+Red	S
+Red	M
+Blue	S
+Blue	M
+58. JOIN vs Subquery
+Definition
+JOIN
+
+Combines data from multiple tables into a single result set.
+
+Subquery
+
+A query written inside another query.
+
+Comparison
+JOIN	Subquery
+Combines tables	Nested query
+Usually faster	Can be slower for large datasets
+Better for related tables	Useful for filtering or calculations
+Easy to read with aliases	Can become difficult when nested deeply
+JOIN Example
+SELECT Employees.Name,
+Departments.Department
+FROM Employees
+JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+Subquery Example
+SELECT Name
+FROM Employees
+WHERE DeptID IN
+(
+SELECT DeptID
+FROM Departments
+WHERE Department='IT'
+);
+59. Join Conditions
+Definition
+
+A join condition specifies how two tables are related.
+
+It is written using the ON clause.
+
+Without a proper join condition, SQL may return incorrect results.
+
+Syntax
+SELECT *
+FROM table1
+JOIN table2
+ON table1.column = table2.column;
+Example
+SELECT Employees.Name,
+Departments.Department
+FROM Employees
+JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+
+Here,
+
+Employees.DeptID = Departments.DeptID
+
+is the join condition.
+
+60. Common Join Mistakes
+1. Forgetting the ON Clause
+
+❌ Wrong
+
+SELECT *
+FROM Employees
+JOIN Departments;
+
+This may produce a Cartesian product or a syntax error depending on the database.
+
+2. Joining on the Wrong Column
+
+❌ Wrong
+
+ON Employees.EmpID = Departments.DeptID
+
+✔ Correct
+
+ON Employees.DeptID = Departments.DeptID
+3. Using the Wrong Join Type
+
+Using an INNER JOIN when a LEFT JOIN is required may cause missing rows in the result.
+
+4. Duplicate Rows
+
+Joining tables with duplicate matching values can return more rows than expected.
+
+5. Ambiguous Column Names
+
+When both tables have the same column name (e.g., DeptID), always prefix the table name or alias.
+
+❌ Wrong
+
+SELECT DeptID
+FROM Employees
+JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+
+✔ Correct
+
+SELECT Employees.DeptID
+FROM Employees
+JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+6. Forgetting Table Aliases in Complex Joins
+
+Instead of
+
+SELECT Employees.Name
+FROM Employees
+INNER JOIN Departments
+ON Employees.DeptID = Departments.DeptID;
+
+Use aliases for readability:
+
+SELECT E.Name,
+D.Department
+FROM Employees E
+INNER JOIN Departments D
+ON E.DeptID = D.DeptID;
+Summary of SQL Joins
+Join Type	Returns
+INNER JOIN	Only matching rows from both tables
+LEFT JOIN	All rows from the left table + matching rows from the right
+RIGHT JOIN	All rows from the right table + matching rows from the left
+FULL JOIN	All rows from both tables, matching where possible
+SELF JOIN	A table joined with itself
+CROSS JOIN	Every row from the first table combined with every row from the second
+Quick Interview Revision
+Question	One-Line Answer
+What is a JOIN?	A JOIN combines rows from two or more tables based on a related column.
+INNER JOIN	Returns only the matching rows from both tables.
+LEFT JOIN	Returns all rows from the left table and matching rows from the right table.
+RIGHT JOIN	Returns all rows from the right table and matching rows from the left table.
+FULL JOIN	Returns all rows from both tables, with NULL for unmatched values.
+SELF JOIN	Joins a table with itself to compare rows within the same table.
+CROSS JOIN	Returns the Cartesian product of two tables.
+JOIN vs Subquery	JOIN combines tables directly; a subquery is a query nested inside another query.
+Join Conditions	The ON clause defines how rows from two tables are matched.
+Common Join Mistakes	Missing ON, wrong join type, wrong join column, duplicate rows, and ambiguous column names.
+
+
+
+Task 6: Employee & Department Join
+Objective: Combine data from multiple tables.
+Requirements:
+● Create departments table
+● Fetch employee names with department names
+● Include employees without department
+
+
+
+
+SELECT e.name,
+       d.department_name
+FROM employees e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+
+
+
+SELECT e.name,
+       d.department_name
+FROM employees e
+LEFT JOIN departments d
+ON e.department_id = d.department_id;
+
+
